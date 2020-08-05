@@ -3,10 +3,10 @@
 LiquidCrystal lcd(6, 7, 5, 4, 3, 2);//RS,EN,D4,D5,D6,D7 
 
 const int analogInPin = A0; 
-int ppump = 12;
-const unsigned long ppump_offTime = 11000;
-unsigned long ppump_onTime = 1000;
-unsigned int ppumpstate = LOW;
+int ppump = 8;
+//const unsigned long ppump_offTime = 11000;
+//unsigned long ppump_onTime = 1000;
+unsigned int ppumpstate = HIGH;
 unsigned long previousMillis=0;
 int sensorValue = 0; 
 unsigned long int avgValue; 
@@ -16,7 +16,7 @@ int buf[10],temp;
 void setup() {
   
  pinMode (ppump,OUTPUT);
- digitalWrite (ppump,HIGH);
+ digitalWrite (ppump,ppumpstate);
  Serial.begin(9600);
  
  lcd.begin(16, 2);
@@ -64,17 +64,20 @@ void loop() {
  {
  }
  long currentMillis = millis();
+ 
+ bool turnOn = false;
+ 
+ if (phValue < 5.85) {
+   turnOn = true;
+ }
+ 
+ 
+ if (turnOn) {
+   digitalWrite(ppump, LOW);
+   delay(5000);
+   digitalWrite(ppump, HIGH);
+   delay(600000);
+ }
 
- if ((ppump==HIGH)&&(phValue<5.85>=ppump_offTime))
- {
-
- } else if(ppump==LOW)&&(phValue>5.85>=onTime))
-  
-  {
-    //digitalWrite(RELAY2, LOW);
-    ppump = HIGH;  // Turn it off
-    previousMillis = currentMillis;  // Remember the time
-    digitalWrite(ppump, HIGH);  // Update the actual relay
-  } 
 }
  
